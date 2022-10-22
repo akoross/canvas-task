@@ -1,24 +1,21 @@
-import logo from './logo.svg';
 import './App.css';
+import Button from '@mui/material/Button';
+import Canvas from './components/Canvas';
+import { Stack } from '@mui/material';
 
 function App() {
   return (
-    <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-    </div>
+    <Stack
+      direction='column'
+      justifyContent='center'
+      alignItems='center'
+      spacing={2}
+    >
+      <Canvas />
+      <Button variant='outlined' color='error'>
+        Collapse lines
+      </Button>
+    </Stack>
   );
 }
 
