@@ -1,3 +1,4 @@
+import { Button, Stack } from '@mui/material';
 import React, { useCallback, useEffect, useRef, useState } from 'react';
 import './../App.css';
 
@@ -132,6 +133,7 @@ export default function Canvas() {
     (event) => {
       setIsDrawStart(false);
       setLines((prev) => [...prev, { c1: startPosition, c2: lineCoordinates }]);
+      console.log(lines);
     },
     [startPosition, lineCoordinates]
   );
@@ -185,9 +187,65 @@ export default function Canvas() {
     };
   }, [mouseUpListener]);
 
+  function dividePoints(startPoint, endPoint, points) {
+    let { x: x1, y: y1 } = startPoint;
+    let { x: x2, y: y2 } = endPoint;
+
+    let dx = (x2 - x1) / points;
+    let dy = (y2 - y1) / points;
+
+    let interiorPoints = [];
+
+    for (let i = 1; i < points; i++)
+      interiorPoints.push({ x: x1 + i * dx, y: y1 + i * dy });
+
+    return [startPoint, ...interiorPoints, endPoint];
+  }
+
+  const clearLine = (point1, point2) => {
+    const xx = point2.x > point1.x ? point2.x - point1.x : point1.x - point2.x;
+    const yy = point2.y < point1.y ? point2.y - point1.y : point1.y - point2.y;
+
+    const lineWidth = Math.round(Math.sqrt(xx * xx + yy * yy));
+
+    const linePoints = dividePoints(point1, point2, lineWidth);
+    let idInterval = undefined;
+    for (let i = 0; i <= linePoints.length / 2; i++) {
+      const j = linePoints.length - (i + 1);
+      idInterval = setInterval(() => {
+        ctxRef.current.clearRect(
+          linePoints[i].x - 3,
+          linePoints[i].y - 3,
+          6,
+          6
+        );
+        ctxRef.current.clearRect(
+          linePoints[j].x - 3,
+          linePoints[j].y - 3,
+          6,
+          6
+        );
+      }, (3000 / linePoints.length) * 2);
+    }
+    clearInterval(idInterval);
+  };
+
+  const collapseLines = () => {
+    if (!lines.length) {
+      return;
+    }
+    lines.forEach((line) => {
+      clearLine(line.c1, line.c2);
+    });
+    setLines([]);
+  };
+
   return (
-    <div className='container'>
-        <canvas className='canvas' ref={canvasRef} />;
-    </div>
-  )
+    <Stack direction='column' spacing={2}>
+      <canvas className='canvas' ref={canvasRef} />
+      <Button variant='outlined' color='error' onClick={collapseLines}>
+        Collapse lines
+      </Button>
+    </Stack>
+  );
 }
