@@ -17,7 +17,6 @@ export default function Canvas() {
     canvasRef.current.style.width = `${window.innerWidth}px`;
     canvasRef.current.style.height = `${window.innerHeight}px`;
     const context = canvasRef.current.getContext('2d');
-    console.log(context);
     context.scale(2, 2);
     ctxRef.current = context;
   }, []);
