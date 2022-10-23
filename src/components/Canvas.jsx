@@ -17,6 +17,7 @@ export default function Canvas() {
     canvasRef.current.style.width = `${window.innerWidth}px`;
     canvasRef.current.style.height = `${window.innerHeight}px`;
     const context = canvasRef.current.getContext('2d');
+    console.log(context);
     context.scale(2, 2);
     ctxRef.current = context;
   }, []);
@@ -133,7 +134,6 @@ export default function Canvas() {
     (event) => {
       setIsDrawStart(false);
       setLines((prev) => [...prev, { c1: startPosition, c2: lineCoordinates }]);
-      console.log(lines);
     },
     [startPosition, lineCoordinates]
   );
@@ -212,7 +212,7 @@ export default function Canvas() {
     let idInterval = undefined;
     for (let i = 0; i <= linePoints.length / 2; i++) {
       const j = linePoints.length - (i + 1);
-      idInterval = setInterval(() => {
+      idInterval = setTimeout(() => {
         ctxRef.current.clearRect(
           linePoints[i].x - 3,
           linePoints[i].y - 3,
@@ -225,23 +225,29 @@ export default function Canvas() {
           6,
           6
         );
-      }, (3000 / linePoints.length) * 2);
+      }, 1);
     }
-    clearInterval(idInterval);
+    clearTimeout(idInterval);
   };
 
   const collapseLines = () => {
     if (!lines.length) {
       return;
     }
-    lines.forEach((line) => {
+    lines.forEach((line, i) => {
       clearLine(line.c1, line.c2);
     });
+
     setLines([]);
   };
 
   return (
-    <Stack direction='column' spacing={2}>
+    <Stack
+      direction='column'
+      justifyContent='center'
+      alignItems='center'
+      spacing={2}
+    >
       <canvas className='canvas' ref={canvasRef} />
       <Button variant='outlined' color='error' onClick={collapseLines}>
         Collapse lines
