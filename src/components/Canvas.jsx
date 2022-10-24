@@ -80,7 +80,7 @@ export default function Canvas() {
     ctxRef.current.beginPath();
     ctxRef.current.arc(x, y, 3, 0, 2 * Math.PI);
     ctxRef.current.stroke();
-  });
+  }, []);
 
   const drawLine = useCallback((start, end) => {
     ctxRef.current.lineCap = 'round';
@@ -102,7 +102,7 @@ export default function Canvas() {
         setLineCoordinates(coorsinates);
       }
     },
-    [isDrawStart, startPosition]
+    [isDrawStart, startPosition, lineCoordinates]
   );
 
   const mouseMoveListener = useCallback(
@@ -134,27 +134,8 @@ export default function Canvas() {
       setIsDrawStart(false);
       setLines((prev) => [...prev, { c1: startPosition, c2: lineCoordinates }]);
     },
-    [startPosition, lineCoordinates]
+    [startPosition, lineCoordinates, lines]
   );
-
-  useEffect(() => {
-    if (lines.length) {
-      for (let i = 0; i < lines.length; i++) {
-        const { c1, c2 } = lines[i];
-        drawLine(c1, c2);
-
-        if (lines.length) {
-          for (let j = 0; j <= i; j++) {
-            const intersectionPoint = calculateIntersection(lines[i], lines[j]);
-
-            if (intersectionPoint) {
-              drawCircle(intersectionPoint);
-            }
-          }
-        }
-      }
-    }
-  });
 
   useEffect(() => {
     if (!canvasRef.current) {
@@ -181,6 +162,24 @@ export default function Canvas() {
 
   useEffect(() => {
     canvasRef.current.addEventListener('mouseup', mouseUpListener);
+
+    if (lines.length) {
+      for (let i = 0; i < lines.length; i++) {
+        const { c1, c2 } = lines[i];
+        drawLine(c1, c2);
+
+        if (lines.length) {
+          for (let j = 0; j <= i; j++) {
+            const intersectionPoint = calculateIntersection(lines[i], lines[j]);
+
+            if (intersectionPoint) {
+              drawCircle(intersectionPoint);
+            }
+          }
+        }
+      }
+    }
+
     return () => {
       canvasRef.current.removeEventListener('mouseup', mouseUpListener);
     };
