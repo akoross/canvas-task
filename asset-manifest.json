@@ -1,13 +1,13 @@
 {
   "files": {
     "main.css": "/canvas-task-pages/static/css/main.1d4b3b64.css",
-    "main.js": "/canvas-task-pages/static/js/main.d365aac2.js",
+    "main.js": "/canvas-task-pages/static/js/main.e49a8a3d.js",
     "index.html": "/canvas-task-pages/index.html",
     "main.1d4b3b64.css.map": "/canvas-task-pages/static/css/main.1d4b3b64.css.map",
-    "main.d365aac2.js.map": "/canvas-task-pages/static/js/main.d365aac2.js.map"
+    "main.e49a8a3d.js.map": "/canvas-task-pages/static/js/main.e49a8a3d.js.map"
   },
   "entrypoints": [
     "static/css/main.1d4b3b64.css",
-    "static/js/main.d365aac2.js"
+    "static/js/main.e49a8a3d.js"
   ]
 }
